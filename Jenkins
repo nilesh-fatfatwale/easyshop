@@ -32,7 +32,7 @@ pipeline {
                         script {
                             withCredentials([
                                 usernamePassword(
-                                    credentialsId: 'DockderHub',
+                                    credentialsId: 'DockerHub',
                                     usernameVariable: 'dockerUsername',
                                     passwordVariable: 'dockerPassword'
                                 )
@@ -52,7 +52,7 @@ pipeline {
                         script {
                             withCredentials([
                                 usernamePassword(
-                                    credentialsId: 'DockderHub',
+                                    credentialsId: 'DockerHub',
                                     usernameVariable: 'dockerUsername',
                                     passwordVariable: 'dockerPassword'
                                 )
@@ -88,7 +88,7 @@ pipeline {
                         script {
                             withCredentials([
                                 usernamePassword(
-                                    credentialsId: 'DockderHub',
+                                    credentialsId: 'DockerHub',
                                     usernameVariable: 'dockerUsername',
                                     passwordVariable: 'dockerPassword'
                                 )
@@ -106,7 +106,7 @@ pipeline {
                         script {
                             withCredentials([
                                 usernamePassword(
-                                    credentialsId: 'DockderHub',
+                                    credentialsId: 'DockerHub',
                                     usernameVariable: 'dockerUsername',
                                     passwordVariable: 'dockerPassword'
                                 )
