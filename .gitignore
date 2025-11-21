@@ -10,22 +10,10 @@ Dockerfile.dev
 Jenkinsfile
 LICENSE
 about.md
-components.json
 docker-compose.yml
 ecosystem.config.cjs
 eks.tf
 kubernetes/
-next.config.cjs
-next.config.js
-package-lock.json
-package.json
-postcss.config.js
-public/
-scripts/
-src/
-tailwind.config.ts
-yarn.lock
-tsconfig.json
 # dependencies
 /node_modules
 /.pnp
