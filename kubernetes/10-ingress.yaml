@@ -4,7 +4,7 @@ metadata:
   name: easyshop-ingress
   namespace: easyshop
 spec:
- ingressClassName: nginx
+  ingressClassName: nginx
   rules:
   - host: easyshop.nileshfatfatwale.dev
     http:
