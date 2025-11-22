@@ -4,6 +4,7 @@ metadata:
   name: easyshop-ingress
   namespace: easyshop
 spec:
+ ingressClassName: nginx
   rules:
   - http:
       paths:
