@@ -6,7 +6,8 @@ metadata:
 spec:
  ingressClassName: nginx
   rules:
-  - http:
+  - host: easyshop.nileshfatfatwale.dev
+    http:
       paths:
       - path: /
         pathType: Prefix
