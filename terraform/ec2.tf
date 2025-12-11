@@ -1,35 +1,43 @@
 data "aws_ami" "os_image" {
-  owners = ["099720109477"]
+  owners      = ["099720109477"]
   most_recent = true
   filter {
     name   = "state"
     values = ["available"]
   }
   filter {
-    name = "name"
+    name   = "name"
     values = ["ubuntu/images/hvm-ssd-gp3/*24.04-amd64*"]
   }
 }
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "terra-automate-key"
+  key_name   = "terra-key"
   public_key = file("terra-key.pub")
-}
-
-resource "aws_default_vpc" "default" {
-
 }
 
 resource "aws_security_group" "allow_user_to_connect" {
   name        = "allow TLS"
   description = "Allow user to connect"
-  vpc_id      = aws_default_vpc.default.id
-  ingress {
-    description = "port 22 allow"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+   vpc_id      = module.vpc.vpc_id
+
+  dynamic "ingress" {
+    for_each = [
+      { description = "port 22 allow", from_port = 22, to_port = 22, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"] },
+      { description = "port 80 allow", from_port = 80, to_port = 80, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"] },
+      { description = "port 443 allow", from_port = 443, to_port = 443, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"] },
+      { description = "port 8080 allow", from_port = 8080, to_port = 8080, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"] },
+      { description = "port 9000 allow", from_port = 9000, to_port = 9000, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"] }
+    ]
+    content {
+
+      description = ingress.value.description
+      from_port   = ingress.value.from_port
+      to_port     = ingress.value.to_port
+      protocol    = ingress.value.protocol
+      cidr_blocks = ingress.value.cidr_blocks
+
+    }
   }
 
   egress {
@@ -40,53 +48,27 @@ resource "aws_security_group" "allow_user_to_connect" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    description = "port 80 allow"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "port 443 allow"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    description = "port 8080 allow"
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
-    Name = "mysecurity"
+    Name = "InstanceSecuritGroup"
   }
 }
 
-resource "aws_instance" "testinstance" {
+resource "aws_instance" "bastion_host" {
   ami             = data.aws_ami.os_image.id
-  instance_type   = var.instance_type 
+  instance_type   = var.instance_type
   key_name        = aws_key_pair.deployer.key_name
   security_groups = [aws_security_group.allow_user_to_connect.name]
-  user_data = file("${path.module}/install_tools.sh")
+  user_data       = file("${path.module}/install_tools.sh")
   tags = {
-    Name = "Jenkins-Automate"
+    Name = "Jenkins-k8s-Automate"
   }
   root_block_device {
-    volume_size = 20
+    volume_size = 30
     volume_type = "gp3"
   }
-  
-}
-
-
-resource "aws_ec2_instance_state" "instance_state" {
-  instance_id = aws_instance.testinstance.id
-  state = ""
 } 
+
+resource "aws_eip" "jenkins_server_ip" {
+  instance = aws_instance.bastion_host.id
+  domain   = "vpc"
+}
