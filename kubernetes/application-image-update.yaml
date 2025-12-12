@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1 # Specifies the API version for the ArgoCD Appl
 kind: Application               # Declares this resource as an ArgoCD Application
 metadata:
   name: easyshop               # Name of the ArgoCD Application
-  namespace: easyshop            # Namespace where the Application resource will be created
+  namespace: argocd           # Namespace where the Application resource will be created
   annotations:
     # Assign alias 'chai-app' to your image
     argocd-image-updater.argoproj.io/image-list: easyshop=nileshfatfatwale/easyshop # Maps the image alias 'chai-app' to your DockerHub image
@@ -11,7 +11,7 @@ metadata:
     argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/argocd-image-updater-git-creds # Configures image updater to write changes back to Git using provided secret
 
     # Update strategy for chai-app image
-    argocd-image-updater.argoproj.io/easyshop-app.update-strategy: semver # Uses semantic versioning for image updates
+    argocd-image-updater.argoproj.io/easyshop.update-strategy: semver # Uses semantic versioning for image updates
 
 spec:
   project: default              # Associates this Application with the 'default' ArgoCD project
