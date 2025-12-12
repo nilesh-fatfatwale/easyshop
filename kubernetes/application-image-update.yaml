@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1 # Specifies the API version for the ArgoCD Application CRD
+kind: Application               # Declares this resource as an ArgoCD Application
+metadata:
+  name: easyshop               # Name of the ArgoCD Application
+  namespace: argocd             # Namespace where the Application resource will be created
+  annotations:
+    # Assign alias 'chai-app' to your image
+    argocd-image-updater.argoproj.io/image-list: easyshop-app=nileshfatfatwale/easyshop # Maps the image alias 'chai-app' to your DockerHub image
+
+    # Use git write-back
+    argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/argocd-image-updater-git-creds # Configures image updater to write changes back to Git using provided secret
+
+    # Update strategy for chai-app image
+    argocd-image-updater.argoproj.io/easyshop-app.update-strategy: semver # Uses semantic versioning for image updates
+
+spec:
+  project: default              # Associates this Application with the 'default' ArgoCD project
+  source:
+    repoURL: https://github.com/nilesh-fatfatwale/easyshop.git # Git repository containing the app manifests
+    targetRevision: dev        # Branch or tag to track in the repository
+    path: kubernetes # Path within the repo where the manifests(kustomization) are located
+  destination:
+    server: https://kubernetes.default.svc # Kubernetes API server address (in-cluster)
+    namespace: easyshop           # Namespace in the cluster where app resources will be deployed
+  syncPolicy:
+    automated:                  # Enables automated sync for the application
+      prune: true               # Automatically deletes resources that are no longer defined in Git
+      selfHeal: true            # Automatically corrects drift between live and desired state
+
+# Brief: This ArgoCD Application manifest configures automated deployment and image updates for the 'chai-app' using ArgoCD Image Updater, with changes written back to Git.
