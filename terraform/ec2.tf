@@ -5,10 +5,11 @@ data "aws_ami" "os_image" {
     name   = "state"
     values = ["available"]
   }
-  filter {
+  filter { 
     name   = "name"
     values = ["ubuntu/images/hvm-ssd-gp3/*24.04-amd64*"]
   }
+
 }
 
 resource "aws_key_pair" "deployer" {
@@ -19,7 +20,7 @@ resource "aws_key_pair" "deployer" {
 resource "aws_security_group" "allow_user_to_connect" {
   name        = "allow TLS"
   description = "Allow user to connect"
-   vpc_id      = module.vpc.vpc_id
+  vpc_id = module.vpc.vpc_id
 
   dynamic "ingress" {
     for_each = [
@@ -57,11 +58,13 @@ resource "aws_instance" "bastion_host" {
   ami             = data.aws_ami.os_image.id
   instance_type   = var.instance_type
   key_name        = aws_key_pair.deployer.key_name
-  security_groups = [aws_security_group.allow_user_to_connect.name]
+  vpc_security_group_ids = [aws_security_group.allow_user_to_connect.id]
+  subnet_id              = module.vpc.public_subnets[0]
   user_data       = file("${path.module}/install_tools.sh")
   tags = {
     Name = "Jenkins-k8s-Automate"
   }
+
   root_block_device {
     volume_size = 30
     volume_type = "gp3"
