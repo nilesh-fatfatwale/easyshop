@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1 # Specifies the API version for the ArgoCD Appl
 kind: Application               # Declares this resource as an ArgoCD Application
 metadata:
   name: easyshop               # Name of the ArgoCD Application
-  namespace: argocd             # Namespace where the Application resource will be created
+  namespace: easyshop            # Namespace where the Application resource will be created
   annotations:
     # Assign alias 'chai-app' to your image
     argocd-image-updater.argoproj.io/image-list: easyshop=nileshfatfatwale/easyshop # Maps the image alias 'chai-app' to your DockerHub image
