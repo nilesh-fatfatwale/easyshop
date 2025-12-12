@@ -20,7 +20,7 @@ pipeline {
             steps {
                 git url: "https://github.com/nilesh-fatfatwale/easyshop",
                     branch: "dev",
-                    credentialsId: "github-credentials"
+                    // credentialsId: "github-credentials"
             }
         }
 
