@@ -10,6 +10,16 @@ pipeline {
     
     stages {
 
+        stage("Validate Parameters") {
+            steps {
+                script {
+                    if (params.Fullstack_Backend_Tag == '' || params.Fullstack_Frontend_Tag == '') {
+                        error("Fullstack_Backend_Tag and Fullstack_Frontend_Tag must be provided.")
+                    }
+                }
+            }
+        }
+        
         stage('Cleanup Workspace') {
             steps {
                 cleanWs()
@@ -19,11 +29,18 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 git url: "https://github.com/nilesh-fatfatwale/easyshop",
-                    branch: "dev",
-                    credentialsId: "github-credentials"
+                    branch: "dev"
             }
         }
 
+        stage("OWASP: Dependency check"){
+            steps{
+                script{
+                    owasp_dependency()
+                }
+            }
+        }
+        
         stage('Build Docker Images') {
             parallel {
 
