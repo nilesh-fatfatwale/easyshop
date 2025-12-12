@@ -66,4 +66,10 @@ sudo apt-get install unzip
 unzip -q awscliv2.zip
 sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update   
 
-# alb 
+# ingress-nginx-controller
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install my-ingress-nginx ingress-nginx/ingress-nginx \
+  --namespace ingress-nginx \
+  --create-namespace \
+  --set controller.enableSSLPassthrough=true
