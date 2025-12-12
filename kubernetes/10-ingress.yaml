@@ -3,6 +3,10 @@ kind: Ingress
 metadata:
   name: easyshop-ingress
   namespace: easyshop
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: nginx
   rules:
@@ -16,4 +20,7 @@ spec:
             name: easyshop-service
             port:
               number: 80
-
+  tls:
+  - hosts:
+    - easyshop.nileshfatfatwale.dev  # Replace with your domain
+    secretName: easyshop-server-tls
