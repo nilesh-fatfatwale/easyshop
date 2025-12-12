@@ -11,11 +11,11 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - prometheus.nileshfatfatwale.com
-    - grafana.nileshfatfatwale.com
+    - prometheus.nileshfatfatwale.dev
+    - grafana.nileshfatfatwale.dev
     secretName: monitoring-tls
   rules:
-  - host: prometheus.nileshfatfatwale.com
+  - host: prometheus.nileshfatfatwale.dev
     http:
       paths:
       - path: /
@@ -25,7 +25,7 @@ spec:
             name: kube-prometheus-stack-prometheus    # kubectl se exact name check kar
             port:
               number: 9090
-  - host: grafana.nileshfatfatwale.com
+  - host: grafana.nileshfatfatwale.dev
     http:
       paths:
       - path: /
