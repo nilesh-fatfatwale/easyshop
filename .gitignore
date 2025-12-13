@@ -13,7 +13,6 @@ about.md
 docker-compose.yml
 ecosystem.config.cjs
 eks.tf
-kubernetes/
 # dependencies
 /node_modules
 /.pnp

@@ -2,10 +2,15 @@
 
 pipeline {
     agent any
-    
+
+    environment{
+        SONAR_HOME = tool "Sonar"
+    }
+
     parameters {
         string(name: 'Easyshop_Tag', defaultValue: 'latest', description: 'docker image tag easyshop')
         string(name: 'Migration_Tag', defaultValue: 'latest', description: 'docker image tag for migration')
+        booleanParam(name: 'RUN_MIGRATION', defaultValue: false, description: 'Build & push migration image?')
     }
     
     stages {
@@ -13,8 +18,8 @@ pipeline {
         stage("Validate Parameters") {
             steps {
                 script {
-                    if (params.Fullstack_Backend_Tag == '' || params.Fullstack_Frontend_Tag == '') {
-                        error("Fullstack_Backend_Tag and Fullstack_Frontend_Tag must be provided.")
+                    if (params.Easyshop_Tag == '' || params.Migration_Tag == '') {
+                        error("Easyshop_Tag and Migration_Tag must be provided.")
                     }
                 }
             }
@@ -30,6 +35,22 @@ pipeline {
             steps {
                 git url: "https://github.com/nilesh-fatfatwale/easyshop",
                     branch: "dev"
+            }
+        }
+
+        stage("SonarQube: Code Analysis"){
+            steps{
+                script{
+                    sonarqube_analysis("Sonar","easyshop","easyshop")
+                }
+            }
+        }
+
+        stage("SonarQube: Code Quality Gates"){
+            steps{
+                script{
+                    sonarqube_code_quality()
+                }
             }
         }
 
@@ -65,6 +86,7 @@ pipeline {
                 }
 
                 stage('Build Migration Image') {
+                    when { expression { params.RUN_MIGRATION } }
                     steps {
                         script {
                             withCredentials([
@@ -119,6 +141,7 @@ pipeline {
                 }
 
                 stage('Push Migration Image') {
+                    when { expression { params.RUN_MIGRATION } }
                     steps {
                         script {
                             withCredentials([
@@ -140,4 +163,35 @@ pipeline {
         }
 
     }
+    post {
+    success {
+        mail(
+            to: 'nileshfatfatwale007@gmail.com',
+            subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: """Build SUCCESS
+
+Job: ${env.JOB_NAME}
+Build: ${env.BUILD_NUMBER}
+Branch: ${env.GIT_BRANCH}
+URL: ${env.BUILD_URL}
+"""
+        )
+    }
+    failure {
+        mail(
+            to: 'nileshfatfatwale007@gmail.com',
+            subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: """Build FAILED
+
+Job: ${env.JOB_NAME}
+Build: ${env.BUILD_NUMBER}
+Branch: ${env.GIT_BRANCH}
+URL: ${env.BUILD_URL}
+
+Check console output for details.
+"""
+        )
+    }
+}
+
 }
