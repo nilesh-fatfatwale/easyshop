@@ -17,5 +17,9 @@ spec:
     path: kubernetes 
   destination:
     server: https://83E199C17F5797EFFF7281AA2F1AA42B.gr7.us-east-1.eks.amazonaws.com
-    namespace: easyshop           
+    namespace: easyshop 
+    syncPolicy:
+      automated:                  
+        prune: true               
+        selfHeal: true 
             
