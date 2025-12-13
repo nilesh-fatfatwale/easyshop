@@ -12,4 +12,3 @@ resources:
   - 09-easyshop-service.yaml
   - 11-hpa.yaml
   - 12-migration-job.yaml
----
