@@ -7,6 +7,8 @@ metadata:
     argocd-image-updater.argoproj.io/image-list: easyshop=nileshfatfatwale/easyshop 
     argocd-image-updater.argoproj.io/write-back-method: git:secret:argocd/argocd-image-updater-git-creds 
     argocd-image-updater.argoproj.io/easyshop.update-strategy: semver 
+    notifications.argoproj.io/subscribe.on-deployed.email: "nileshfatfatwale007@gmail.com"
+    notifications.argoproj.io/subscribe.on-health-degraded.email: "nileshfatfatwale007@gmail.com"
 spec:
   project: default              
   source:
