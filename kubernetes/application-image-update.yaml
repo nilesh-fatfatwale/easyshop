@@ -16,7 +16,7 @@ spec:
     targetRevision: dev        
     path: kubernetes 
   destination:
-    server: https://kubernetes.default.svc 
+    server: https://83E199C17F5797EFFF7281AA2F1AA42B.gr7.us-east-1.eks.amazonaws.com
     namespace: easyshop           
   syncPolicy:
     automated:                  
