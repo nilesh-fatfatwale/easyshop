@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 data:
   context: |
-    argocdUrl: "https://argocd.nileshfatfatwale.dev/"  
+    argocdUrl: "http://44.194.202.123:8080/"  
 
   service.email: |
     username: $email-username         # Email username (set as secret)
