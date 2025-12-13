@@ -15,13 +15,5 @@ resources:
   - 10-ingress.yaml
   - 11-hpa.yaml
   - 12-migration-job.yaml
-  - argocd-notifications-cm.yaml
-  - argocd-service-monitors.yaml
-  - letsencrypt-issuer.yaml
-  - monitoring-ingress.yaml
-  - argocd-ingress.yml
 
 namespace: easyshop
-
-commonLabels:
-  app: easyshop
