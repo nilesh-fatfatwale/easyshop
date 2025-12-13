@@ -22,5 +22,5 @@ spec:
               number: 80
   tls:
   - hosts:
-    - easyshop.nileshfatfatwale.dev  # Replace with your domain
+    - easyshop.nileshfatfatwale.dev
     secretName: easyshop-server-tls

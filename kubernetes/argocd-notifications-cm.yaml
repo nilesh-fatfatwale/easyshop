@@ -5,14 +5,13 @@ metadata:
   namespace: argocd
 data:
   context: |
-    argocdUrl: "http://44.194.202.123:8080/"  
-
+    argocdUrl: "https://argocd.nileshfatfatwale.dev/"  
   service.email: |
-    username: $email-username         # Email username (set as secret)
-    password: $email-password         # Email password (set as secret)
-    host: smtp.gmail.com              # SMTP server host
-    port: 465                         # SMTP server port (SSL)
-    from: $email-username             # Sender email address
+    username: $email-username         
+    password: $email-password         
+    host: smtp.gmail.com              
+    port: 465                         
+    from: $email-username             
 
   template.email-health-degraded: |
     email:
@@ -30,7 +29,7 @@ data:
   
   template.email-deployed: |
     email:
-      subject: "[ArgoCD] {{.app.metadata.name}} successfully deployed  🎉"
+      subject: "[ArgoCD] {{.app.metadata.name}} successfully deployed 🎉"
     message: |
       ✅ Application: {{.app.metadata.name}}
       📂 Namespace: {{.app.metadata.namespace}}

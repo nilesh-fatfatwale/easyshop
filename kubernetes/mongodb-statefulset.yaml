@@ -33,3 +33,17 @@ spec:
         - name: mongodb-storage
           persistentVolumeClaim:
             claimName: mongodb-pvc
+
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+  namespace: easyshop
+spec:
+  ports:
+    - port: 27017
+      targetPort: 27017
+  selector:
+    app: mongodb

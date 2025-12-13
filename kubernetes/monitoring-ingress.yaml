@@ -22,7 +22,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: kube-prometheus-stack-prometheus    # kubectl se exact name check kar
+            name: kube-prometheus-stack-prometheus 
             port:
               number: 9090
   - host: grafana.nileshfatfatwale.dev
@@ -32,6 +32,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: kube-prometheus-stack-grafana       # kubectl se exact name check kar
+            name: kube-prometheus-stack-grafana 
             port:
               number: 80

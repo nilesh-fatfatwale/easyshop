@@ -1,18 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 
-.db/
-.dockerignore
+
+
 .env
-.eslintrc.json
-Dockerfile
 Dockerfile.dev
-Jenkinsfile
-LICENSE
 about.md
-docker-compose.yml
-ecosystem.config.cjs
-eks.tf
 # dependencies
 /node_modules
 /.pnp
@@ -108,5 +101,3 @@ terra-key.pub
 terra-key
 JENKINS.md
 README.md
-vpc.tf
-terraform/ec2.tf

@@ -163,35 +163,4 @@ pipeline {
         }
 
     }
-    post {
-    success {
-        mail(
-            to: 'nileshfatfatwale007@gmail.com',
-            subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            body: """Build SUCCESS
-
-Job: ${env.JOB_NAME}
-Build: ${env.BUILD_NUMBER}
-Branch: ${env.GIT_BRANCH}
-URL: ${env.BUILD_URL}
-"""
-        )
-    }
-    failure {
-        mail(
-            to: 'nileshfatfatwale007@gmail.com',
-            subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            body: """Build FAILED
-
-Job: ${env.JOB_NAME}
-Build: ${env.BUILD_NUMBER}
-Branch: ${env.GIT_BRANCH}
-URL: ${env.BUILD_URL}
-
-Check console output for details.
-"""
-        )
-    }
-}
-
 }
