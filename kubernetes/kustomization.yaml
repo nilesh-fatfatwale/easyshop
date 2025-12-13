@@ -1,0 +1,27 @@
+# easyshop/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - 01-namespace.yaml
+  - 02-mongodb-pv.yaml
+  - 03-mongodb-pvc.yaml
+  - 04-configmap.yaml
+  - 05-secrets.yaml
+  - 06-mongodb-service.yaml
+  - 07-mongodb-statefulset.yaml
+  - 08-easyshop-deployment.yaml
+  - 09-easyshop-service.yaml
+  - 10-ingress.yaml
+  - 11-hpa.yaml
+  - 12-migration-job.yaml
+  - argocd-notifications-cm.yaml
+  - argocd-service-monitors.yaml
+  - letsencrypt-issuer.yaml
+  - monitoring-ingress.yaml
+  - argocd-ingress.yml
+
+namespace: easyshop
+
+commonLabels:
+  app: easyshop
