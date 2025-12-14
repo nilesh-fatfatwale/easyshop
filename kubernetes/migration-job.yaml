@@ -1,14 +1,14 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: db-migration:v1.5
+  name: db-migration:v1.02
   namespace: easyshop
 spec:
   template:
     spec:
       containers:
-      - name: migration:v1.5
-        image: nileshfatfatwale/migration:v1.5
+      - name: migration:v1.02
+        image: nileshfatfatwale/migration:v1.02
         imagePullPolicy: Always
         env:
         - name: MONGODB_URI

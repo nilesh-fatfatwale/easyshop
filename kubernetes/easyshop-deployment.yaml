@@ -1,44 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: easyshop:v1.5
-  namespace: easyshop:v1.5
+  name: easyshop:v1.02
+  namespace: easyshop:v1.02
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: easyshop:v1.5
+      app: easyshop:v1.02
   template:
     metadata:
       labels:
-        app: easyshop:v1.5
+        app: easyshop:v1.02
     spec:
       containers:
-        - name: easyshop:v1.5
-          image: nileshfatfatwale/easyshop:v1.5
+        - name: easyshop:v1.02
+          image: nileshfatfatwale/easyshop:v1.02
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
           envFrom:
             - configMapRef:
-                name: easyshop:v1.5
+                name: easyshop:v1.02
             - secretRef:
-                name: easyshop:v1.5
+                name: easyshop:v1.02
           env:
             - name: NEXTAUTH_URL
               valueFrom:
                 configMapKeyRef:
-                  name: easyshop:v1.5
+                  name: easyshop:v1.02
                   key: NEXTAUTH_URL
             - name: NEXTAUTH_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: easyshop:v1.5
+                  name: easyshop:v1.02
                   key: NEXTAUTH_SECRET
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: easyshop:v1.5
+                  name: easyshop:v1.02
                   key: JWT_SECRET
           resources:
             requests:
@@ -71,8 +71,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: easyshop:v1.5
-  namespace: easyshop:v1.5
+  name: easyshop:v1.02
+  namespace: easyshop:v1.02
 spec:
   type: NodePort
   ports:
@@ -80,4 +80,4 @@ spec:
       targetPort: 3000
       nodePort: 30000
   selector:
-    app: easyshop:v1.5
+    app: easyshop:v1.02
