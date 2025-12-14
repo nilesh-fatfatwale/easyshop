@@ -1,0 +1,113 @@
+@Library('Shared') _
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'Easyshop_Tag',  defaultValue: 'latest', description: 'docker image tag easyshop')
+        string(name: 'Migration_Tag', defaultValue: 'latest', description: 'docker image tag for migration')
+        booleanParam(name: 'RUN_MIGRATION', defaultValue: false, description: 'Build & push migration image?')
+    }
+
+    stages {
+        stage("Workspace cleanup") {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Git: Code Checkout') {
+            steps {
+                script {
+                    code_checkout("https://github.com/nilesh-fatfatwale/easyshop.git","dev")
+                }
+            }
+        }
+
+        stage("Update: Kubernetes manifests") {
+            steps {
+                script {
+                    dir('kubernetes') {
+                        sh """
+                          sed -i -e s/easyshop.*/easyshop:${params.Easyshop_Tag}/g easyshop-deployment.yaml
+                        """
+                        if (params.RUN_MIGRATION) {
+                            sh """
+                              sed -i -e s/migration.*/migration:${params.Migration_Tag}/g migration-job.yaml
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("Git: Code update and push to GitHub") {
+            steps {
+                script {
+                    withCredentials([gitUsernamePassword(credentialsId: 'Github', gitToolName: 'Default')]) {
+                        sh '''
+                          echo "Checking repository status: "
+                          git status
+
+                          echo "Adding changes to git: "
+                          git add .
+
+                          echo "Commiting changes: "
+                          git commit -m "Updated environment variables" || echo "No changes to commit"
+
+                          echo "Pushing changes to github: "
+                          git push https://github.com/nilesh-fatfatwale/easyshop.git dev
+                        '''
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            emailext(
+                attachLog: true,
+                from: 'fatfatwalenilesh@gmail.com',
+                subject: "Easyshop CD SUCCESS - '${currentBuild.result}'",
+                body: """
+                  <html>
+                  <body>
+                    <div style="background-color: #FFA07A; padding: 10px; margin-bottom: 10px;">
+                      <p style="color: black; font-weight: bold;">Project: ${env.JOB_NAME}</p>
+                    </div>
+                    <div style="background-color: #90EE90; padding: 10px; margin-bottom: 10px;">
+                      <p style="color: black; font-weight: bold;">Build Number: ${env.BUILD_NUMBER}</p>
+                    </div>
+                    <div style="background-color: #87CEEB; padding: 10px; margin-bottom: 10px;">
+                      <p style="color: black; font-weight: bold;">URL: ${env.BUILD_URL}</p>
+                    </div>
+                  </body>
+                  </html>
+                """,
+                to: 'nileshfatfatwale007@gmail.com',
+                mimeType: 'text/html'
+            )
+        }
+        failure {
+            emailext(
+                attachLog: true,
+                from: 'fatfatwalenilesh@gmail.com',
+                subject: "Easyshop CD FAILED - '${currentBuild.result}'",
+                body: """
+                  <html>
+                  <body>
+                    <div style="background-color: #FFA07A; padding: 10px; margin-bottom: 10px;">
+                      <p style="color: black; font-weight: bold;">Project: ${env.JOB_NAME}</p>
+                    </div>
+                    <div style="background-color: #90EE90; padding: 10px; margin-bottom: 10px;">
+                      <p style="color: black; font-weight: bold;">Build Number: ${env.BUILD_NUMBER}</p>
+                    </div>
+                  </body>
+                  </html>
+                """,
+                to: 'nileshfatfatwale007@gmail.com',
+                mimeType: 'text/html'
+            )
+        }
+    }
+}
