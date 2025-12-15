@@ -1,0 +1,88 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: easyshop-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - easyshop-network
+
+  migration:
+    build:
+      context: .
+      dockerfile: scripts/Dockerfile.migration
+    container_name: easyshop-migration
+    env_file:
+      - .env
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - easyshop-network
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: easyshop-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - easyshop-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - MONGODB_URI=mongodb://mongodb:27017/easyshop
+        - REDIS_URI=redis://redis:6379
+        - NEXTAUTH_URL=http://13.50.235.247
+        - NEXT_PUBLIC_API_URL=http://13.50.235.247/api
+        - NEXTAUTH_SECRET=PDkN0JpTZDz/hXxrZ584vMUF5sc+bKGsx6Yh1zSo0xE=
+        - JWT_SECRET=d2ba6b7722255d9ca9bebe12293c10eca4fb76f6b567c92edcd2445a7c9cc6f1
+        - NODE_ENV=production
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/easyshop
+      - REDIS_URI=redis://redis:6379
+      - NEXTAUTH_URL=http://13.50.235.247
+      - NEXT_PUBLIC_API_URL=http://13.50.235.247/api
+      - NEXTAUTH_SECRET=PDkN0JpTZDz/hXxrZ584vMUF5sc+bKGsx6Yh1zSo0xE=
+      - JWT_SECRET=d2ba6b7722255d9ca9bebe12293c10eca4fb76f6b567c92edcd2445a7c9cc6f1
+      - NODE_ENV=production
+    env_file:
+      - .env
+    container_name: easyshop
+    ports:
+      - "3000:3000"
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    networks:
+      - easyshop-network
+    restart: unless-stopped
+
+networks:
+  easyshop-network:
+    name: easyshop-network
+
+volumes:
+  mongodb_data:
+    name: mongodb_data
+  redis_data:
+    name: redis_data

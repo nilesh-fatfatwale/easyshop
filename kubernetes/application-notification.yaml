@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1 
+kind: Application               
+metadata:
+  name: easyshop               
+  namespace: argocd           
+  annotations:
+    notifications.argoproj.io/subscribe.on-deployed.email: "nileshfatfatwale007@gmail.com"
+    notifications.argoproj.io/subscribe.on-health-degraded.email: "nileshfatfatwale007@gmail.com"
+spec:
+  project: default              
+  source:
+    repoURL: https://github.com/nilesh-fatfatwale/easyshop.git 
+    targetRevision: dev        
+    path: kubernetes 
+  destination:
+    server: https://DCF3F3EC0342140D3F58C40BB9B99E54.gr7.us-east-1.eks.amazonaws.com
+    namespace: easyshop 
+  syncPolicy:
+    automated:                  
+      prune: true               
+      selfHeal: true 
+    syncOptions:
+      - CreateNamespace=true
+            
