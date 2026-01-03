@@ -61,12 +61,6 @@ curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/d
 sudo mv /tmp/eksctl /usr/local/bin
 eksctl version
 
-# Aws cli installation
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-sudo apt-get install unzip
-unzip -q awscliv2.zip
-sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update   
-
 # ingress-nginx-controller
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
